@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Alliar app state (leads, Solo/Equipe, Focado/Completo, theme) lives in src/lib/store.tsx context persisted to localStorage; demo has no backend yet, so move to Lovable Cloud when real data/auth is needed.
+- Business rules (discount approval, round-robin, PIX payload) are pure functions in src/lib/rules.ts and src/lib/pix.ts so they stay unit-tested.

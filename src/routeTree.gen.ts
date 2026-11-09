@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DialerRouteImport } from './routes/dialer'
+import { Route as EquipeRouteImport } from './routes/equipe'
+import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as IndicacoesRouteImport } from './routes/indicacoes'
+import { Route as PipelineRouteImport } from './routes/pipeline'
+import { Route as PortalRouteImport } from './routes/portal'
+import { Route as TreinoRouteImport } from './routes/treino'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DialerRoute = DialerRouteImport.update({
+  id: '/dialer',
+  path: '/dialer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EquipeRoute = EquipeRouteImport.update({
+  id: '/equipe',
+  path: '/equipe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboxRoute = InboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndicacoesRoute = IndicacoesRouteImport.update({
+  id: '/indicacoes',
+  path: '/indicacoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PipelineRoute = PipelineRouteImport.update({
+  id: '/pipeline',
+  path: '/pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TreinoRoute = TreinoRouteImport.update({
+  id: '/treino',
+  path: '/treino',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dialer': typeof DialerRoute
+  '/equipe': typeof EquipeRoute
+  '/inbox': typeof InboxRoute
+  '/indicacoes': typeof IndicacoesRoute
+  '/pipeline': typeof PipelineRoute
+  '/portal': typeof PortalRoute
+  '/treino': typeof TreinoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dialer': typeof DialerRoute
+  '/equipe': typeof EquipeRoute
+  '/inbox': typeof InboxRoute
+  '/indicacoes': typeof IndicacoesRoute
+  '/pipeline': typeof PipelineRoute
+  '/portal': typeof PortalRoute
+  '/treino': typeof TreinoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dialer': typeof DialerRoute
+  '/equipe': typeof EquipeRoute
+  '/inbox': typeof InboxRoute
+  '/indicacoes': typeof IndicacoesRoute
+  '/pipeline': typeof PipelineRoute
+  '/portal': typeof PortalRoute
+  '/treino': typeof TreinoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dialer'
+    | '/equipe'
+    | '/inbox'
+    | '/indicacoes'
+    | '/pipeline'
+    | '/portal'
+    | '/treino'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dialer'
+    | '/equipe'
+    | '/inbox'
+    | '/indicacoes'
+    | '/pipeline'
+    | '/portal'
+    | '/treino'
+  id:
+    | '__root__'
+    | '/'
+    | '/dialer'
+    | '/equipe'
+    | '/inbox'
+    | '/indicacoes'
+    | '/pipeline'
+    | '/portal'
+    | '/treino'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DialerRoute: typeof DialerRoute
+  EquipeRoute: typeof EquipeRoute
+  InboxRoute: typeof InboxRoute
+  IndicacoesRoute: typeof IndicacoesRoute
+  PipelineRoute: typeof PipelineRoute
+  PortalRoute: typeof PortalRoute
+  TreinoRoute: typeof TreinoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dialer': {
+      id: '/dialer'
+      path: '/dialer'
+      fullPath: '/dialer'
+      preLoaderRoute: typeof DialerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/equipe': {
+      id: '/equipe'
+      path: '/equipe'
+      fullPath: '/equipe'
+      preLoaderRoute: typeof EquipeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbox': {
+      id: '/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof InboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicacoes': {
+      id: '/indicacoes'
+      path: '/indicacoes'
+      fullPath: '/indicacoes'
+      preLoaderRoute: typeof IndicacoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pipeline': {
+      id: '/pipeline'
+      path: '/pipeline'
+      fullPath: '/pipeline'
+      preLoaderRoute: typeof PipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/treino': {
+      id: '/treino'
+      path: '/treino'
+      fullPath: '/treino'
+      preLoaderRoute: typeof TreinoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DialerRoute: DialerRoute,
+  EquipeRoute: EquipeRoute,
+  InboxRoute: InboxRoute,
+  IndicacoesRoute: IndicacoesRoute,
+  PipelineRoute: PipelineRoute,
+  PortalRoute: PortalRoute,
+  TreinoRoute: TreinoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
