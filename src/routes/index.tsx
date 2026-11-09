@@ -54,8 +54,8 @@ function Index() {
         <section className="rounded-lg border bg-card p-4">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium"><Mic className="size-4 text-primary" />Pedido por áudio com PIX</div>
           <p className="mb-3 text-xs text-muted-foreground">Fale o pedido. A Alliar transcreve, monta os itens e gera o PIX.</p>
-          <VoiceButton label="Gravar pedido" onText={(t) => toast.success("Pedido transcrito", { description: t, action: { label: "Gerar PIX", onClick: () => { select(top[0].id); setTimeout(() => window.dispatchEvent(new Event("alliar:pix")), 50); } } })} />
-          <Button variant="ghost" size="sm" className="ml-2" onClick={() => select(top[0]?.id)}><Zap className="size-3.5" />Atacar o nº 1</Button>
+          <VoiceButton label="Gravar pedido" onText={(t) => toast.success("Pedido transcrito", { description: t, action: { label: "Gerar PIX", onClick: () => { select(top[0]!.id); setTimeout(() => window.dispatchEvent(new Event("alliar:pix")), 50); } } })} />
+          <Button variant="ghost" size="sm" className="ml-2" onClick={() => select(top[0]?.id ?? null)}><Zap className="size-3.5" />Atacar o nº 1</Button>
         </section>
       </div>
     </div>

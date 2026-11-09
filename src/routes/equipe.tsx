@@ -25,7 +25,7 @@ function Team() {
   return (
     <div className="mx-auto max-w-4xl space-y-4">
       <PageHeader title="Equipe & metas" sub="Distribuição justa, ninguém fica no vácuo.">
-        <Button size="sm" variant="secondary" onClick={() => { const n = nextRoundRobin(TEAM.map((t) => t.n), idx); setIdx(n); toast.success(`Novo lead distribuído para ${TEAM[n].n}`); }}><Shuffle className="size-3.5" />Simular novo lead</Button>
+        <Button size="sm" variant="secondary" onClick={() => { const n = nextRoundRobin(TEAM.map((t) => t.n), idx); setIdx(n); toast.success(`Novo lead distribuído para ${TEAM[n]!.n}`); }}><Shuffle className="size-3.5" />Simular novo lead</Button>
       </PageHeader>
       <div className="flex items-center gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 text-xs"><Timer className="size-4 text-warning" />SLA anti-vácuo: lead sem resposta em {SLA_MINUTES} min passa automaticamente para o próximo da fila.</div>
       <section className="rounded-lg border bg-card">

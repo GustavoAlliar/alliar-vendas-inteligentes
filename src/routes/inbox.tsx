@@ -24,7 +24,7 @@ const OBJ: Record<string, string> = {
 
 function InboxPage() {
   const { leads, select, structure } = useApp();
-  const [active, setActive] = useState(leads[0].id);
+  const [active, setActive] = useState(leads[0]!.id);
   const [threads, setThreads] = useState<Record<string, Msg[]>>({});
   const [text, setText] = useState("");
   const lead = leads.find((l) => l.id === active)!;

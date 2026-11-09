@@ -51,7 +51,7 @@ function Dialer() {
               <div className="text-xs uppercase tracking-wider text-muted-foreground">Teleprompter IA</div>
               <ol className="mt-3 space-y-2">
                 {SCRIPT.map((s, i) => (
-                  <li key={i} className={cn("rounded-md p-3 text-sm transition", i === step ? "bg-primary/10 text-foreground ring-1 ring-primary/40" : "text-muted-foreground")}>{s.replace("{nome}", lead.name.split(" ")[0])}</li>
+                  <li key={i} className={cn("rounded-md p-3 text-sm transition", i === step ? "bg-primary/10 text-foreground ring-1 ring-primary/40" : "text-muted-foreground")}>{s.replace("{nome}", lead.name.split(" ")[0] ?? "")}</li>
                 ))}
               </ol>
             </>

@@ -31,16 +31,16 @@ function grade(msgs: string[]) {
 
 function Train() {
   const [p, setP] = useState<P>("Pechincheiro");
-  const [msgs, setMsgs] = useState<{ me: boolean; t: string }[]>([{ me: false, t: PERSONAS.Pechincheiro[0] }]);
+  const [msgs, setMsgs] = useState<{ me: boolean; t: string }[]>([{ me: false, t: PERSONAS.Pechincheiro[0]! }]);
   const [text, setText] = useState("");
   const mine = msgs.filter((m) => m.me).map((m) => m.t);
   const done = mine.length >= 3;
-  const start = (np: P) => { setP(np); setMsgs([{ me: false, t: PERSONAS[np][0] }]); };
+  const start = (np: P) => { setP(np); setMsgs([{ me: false, t: PERSONAS[np][0]! }]); };
   const send = () => {
     if (!text.trim() || done) return;
     const n = [...msgs, { me: true, t: text }];
     const k = n.filter((m) => m.me).length;
-    if (k < 3) n.push({ me: false, t: PERSONAS[p][k] });
+    if (k < 3) n.push({ me: false, t: PERSONAS[p][k]! });
     setMsgs(n); setText("");
   };
   const score = grade(mine);
