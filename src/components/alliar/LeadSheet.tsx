@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FileText, MessageCircle, Mic, Phone, QrCode, StickyNote, Eye } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,11 @@ const ICON = { msg: MessageCircle, call: Phone, proposta: FileText, audio: Mic, 
 export function LeadSheet() {
   const { leads, selected, select, addEvent, updateLead } = useApp();
   const [pix, setPix] = useState(false);
+  useEffect(() => {
+    const h = () => setPix(true);
+    window.addEventListener("alliar:pix", h);
+    return () => window.removeEventListener("alliar:pix", h);
+  }, []);
   const lead = leads.find((l) => l.id === selected);
   if (!lead) return null;
   return (
