@@ -48,7 +48,7 @@ export function PixDialog({ lead, open, onOpenChange }: { lead: Lead; open: bool
             </label>
             <div>
               <div className="mb-2 flex justify-between text-xs text-muted-foreground"><span>Desconto</span><span className="font-mono">{disc}%</span></div>
-              <Slider value={[disc]} max={40} step={1} onValueChange={([v]) => setDisc(v)} />
+              <Slider value={[disc]} max={40} step={1} onValueChange={([v]) => setDisc(v ?? 0)} />
             </div>
             <div className="flex items-baseline justify-between rounded-md bg-muted p-3">
               <span className="text-sm text-muted-foreground">Total</span>

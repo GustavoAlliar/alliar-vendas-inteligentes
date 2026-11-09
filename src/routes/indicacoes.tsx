@@ -22,7 +22,7 @@ function Referral() {
       <PageHeader title="Indicações" sub="Clientes que indicam ganham cashback quando a indicação compra." />
       <section className="rounded-lg border bg-card p-5">
         <div className="mb-2 flex justify-between text-sm"><span>Cashback por indicação convertida</span><span className="font-mono">{pct}%</span></div>
-        <Slider value={[pct]} max={30} step={1} onValueChange={([v]) => setPct(v)} />
+        <Slider value={[pct]} max={30} step={1} onValueChange={([v]) => setPct(v ?? 0)} />
         <p className="mt-3 text-xs text-muted-foreground">Em um ticket médio de {brl(ticket)}, quem indica recebe <b className="text-foreground">{brl((ticket * pct) / 100)}</b>.</p>
         <Button size="sm" className="mt-3" onClick={() => toast.success("Regra salva e enviada aos clientes pelo WhatsApp")}>Salvar regra</Button>
       </section>

@@ -21,14 +21,14 @@ export function useVoice(onText: (t: string) => void) {
     s.continuous = true;
     let text = "";
     s.onresult = (e: any) => { text = Array.from(e.results).map((x: any) => x[0].transcript).join(" "); };
-    s.onend = () => onText(text || FAKE[Math.floor(Math.random() * FAKE.length)]);
+    s.onend = () => onText(text || FAKE[Math.floor(Math.random() * FAKE.length)]!);
     s.onerror = () => {};
     try { s.start(); r.current = s; } catch { r.current = null; }
   };
   const stop = () => {
     setRec(false);
     if (r.current) r.current.stop();
-    else onText(FAKE[Math.floor(Math.random() * FAKE.length)]);
+    else onText(FAKE[Math.floor(Math.random() * FAKE.length)]!);
     r.current = null;
   };
   return { rec, toggle: () => (rec ? stop() : start()) };

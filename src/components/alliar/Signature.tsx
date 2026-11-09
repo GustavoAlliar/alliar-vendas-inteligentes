@@ -5,7 +5,7 @@ export function SignaturePad({ onSigned }: { onSigned: () => void }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const [has, setHas] = useState(false);
-  const pos = (e: React.PointerEvent) => {
+  const pos = (e: React.PointerEvent): [number, number] => {
     const r = ref.current!.getBoundingClientRect();
     return [e.clientX - r.left, e.clientY - r.top];
   };

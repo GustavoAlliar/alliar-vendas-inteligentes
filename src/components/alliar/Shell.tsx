@@ -49,8 +49,8 @@ export function Shell({ children }: { children: ReactNode }) {
       if (t.closest("input,textarea,[contenteditable],[role=dialog]")) return;
       const ids = app.leads.filter((l) => l.stage !== "ganho").map((l) => l.id);
       const i = app.selected ? ids.indexOf(app.selected) : -1;
-      if (e.key === "j") app.select(ids[Math.min(i + 1, ids.length - 1)]);
-      else if (e.key === "k") app.select(ids[Math.max(i - 1, 0)]);
+      if (e.key === "j") app.select(ids[Math.min(i + 1, ids.length - 1)] ?? null);
+      else if (e.key === "k") app.select(ids[Math.max(i - 1, 0)] ?? null);
       else if (!app.selected) return;
       else if (e.key === "1") window.dispatchEvent(new Event("alliar:pix"));
       else if (e.key === "2") { app.updateLead(app.selected, { stage: "contato" }); toast("Retorno agendado"); }
@@ -133,7 +133,7 @@ export function Shell({ children }: { children: ReactNode }) {
       </CommandDialog>
       <Dialog open={!app.tourDone || tour > 0} onOpenChange={(o) => { if (!o) { app.set({ tourDone: true }); setTour(0); } }}>
         <DialogContent className="max-w-sm">
-          {(() => { const idx = Math.max(tour - 1, 0); const [t, d] = TOUR[idx]; return (
+          {(() => { const idx = Math.max(tour - 1, 0); const [t, d] = TOUR[idx]!; return (
             <div className="space-y-4">
               <div className="flex gap-1">{TOUR.map((_, i) => <span key={i} className={cn("h-1 flex-1 rounded-full", i <= idx ? "bg-primary" : "bg-muted")} />)}</div>
               <h2 className="text-lg font-semibold">{t}</h2>
