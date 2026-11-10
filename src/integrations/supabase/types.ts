@@ -14,13 +14,426 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      commissions: {
+        Row: {
+          amount: number
+          id: string
+          lead_id: string
+          rate: number
+          status: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          id?: string
+          lead_id: string
+          rate: number
+          status?: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          id?: string
+          lead_id?: string
+          rate?: number
+          status?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_tenant_id_lead_id_fkey"
+            columns: ["tenant_id", "lead_id"]
+            isOneToOne: true
+            referencedRelation: "leads"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "commissions_tenant_id_user_id_fkey"
+            columns: ["tenant_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles"
+            referencedColumns: ["tenant_id", "user_id"]
+          },
+        ]
+      }
+      contacts: {
+        Row: {
+          company: string
+          email: string
+          id: string
+          name: string
+          phone: string
+          tenant_id: string
+        }
+        Insert: {
+          company?: string
+          email?: string
+          id?: string
+          name: string
+          phone?: string
+          tenant_id: string
+        }
+        Update: {
+          company?: string
+          email?: string
+          id?: string
+          name?: string
+          phone?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_events: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          lead_id: string
+          tenant_id: string
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          lead_id: string
+          tenant_id: string
+          text: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          lead_id?: string
+          tenant_id?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_events_tenant_id_lead_id_fkey"
+            columns: ["tenant_id", "lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          contact_id: string
+          created_at: string
+          id: string
+          owner_id: string
+          priority: string
+          stage: string
+          temp: string
+          tenant_id: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          contact_id: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          priority?: string
+          stage?: string
+          temp?: string
+          tenant_id: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          contact_id?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          priority?: string
+          stage?: string
+          temp?: string
+          tenant_id?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_tenant_id_contact_id_fkey"
+            columns: ["tenant_id", "contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_owner_id_fkey"
+            columns: ["tenant_id", "owner_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles"
+            referencedColumns: ["tenant_id", "user_id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_stage_fkey"
+            columns: ["tenant_id", "stage"]
+            isOneToOne: false
+            referencedRelation: "pipeline_stages"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      pipeline_stages: {
+        Row: {
+          id: string
+          label: string
+          position: number
+          tenant_id: string
+        }
+        Insert: {
+          id: string
+          label: string
+          position: number
+          tenant_id: string
+        }
+        Update: {
+          id?: string
+          label?: string
+          position?: number
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_stages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string
+          display_name: string
+          id: string
+        }
+        Insert: {
+          avatar_url?: string
+          display_name?: string
+          id: string
+        }
+        Update: {
+          avatar_url?: string
+          display_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      proposals: {
+        Row: {
+          base: number
+          created_at: string
+          discount: number
+          id: string
+          lead_id: string
+          status: string
+          tenant_id: string
+          total: number | null
+        }
+        Insert: {
+          base: number
+          created_at?: string
+          discount?: number
+          id?: string
+          lead_id: string
+          status?: string
+          tenant_id: string
+          total?: number | null
+        }
+        Update: {
+          base?: number
+          created_at?: string
+          discount?: number
+          id?: string
+          lead_id?: string
+          status?: string
+          tenant_id?: string
+          total?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposals_tenant_id_lead_id_fkey"
+            columns: ["tenant_id", "lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      tenant_invitations: {
+        Row: {
+          accepted_at: string | null
+          email: string
+          expires_at: string
+          id: string
+          tenant_id: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          email: string
+          expires_at?: string
+          id?: string
+          tenant_id: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          tenant_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_invitations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_settings: {
+        Row: {
+          commission_rate: number
+          pix_key: string
+          structure: string
+          tenant_id: string
+        }
+        Insert: {
+          commission_rate?: number
+          pix_key?: string
+          structure?: string
+          tenant_id: string
+        }
+        Update: {
+          commission_rate?: number
+          pix_key?: string
+          structure?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_settings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          theme: string
+          tour_done: boolean
+          user_id: string
+          view: string
+        }
+        Insert: {
+          theme?: string
+          tour_done?: boolean
+          user_id: string
+          view?: string
+        }
+        Update: {
+          theme?: string
+          tour_done?: boolean
+          user_id?: string
+          view?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      accept_invitation: { Args: { invite_token: string }; Returns: string }
+      create_tenant: { Args: { company_name: string }; Returns: string }
+      is_member: { Args: { t: string }; Returns: boolean }
+      is_tenant_admin: { Args: { t: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
