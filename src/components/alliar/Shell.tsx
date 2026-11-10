@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  Columns3, GraduationCap, Gift, Headset, Home, Inbox, Moon, PhoneCall, Search, Sun, Users, LifeBuoy, HelpCircle, Menu,
+  Columns3, GraduationCap, Gift, Headset, Home, Inbox, Moon, PhoneCall, Search, Sun, Users, LifeBuoy, HelpCircle, Menu, Settings, Contact, FileText, LogOut,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useApp } from "@/lib/store";
@@ -11,10 +11,16 @@ import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, C
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { LeadSheet } from "./LeadSheet";
 import { beep } from "@/lib/rules";
+import { CompanySetup } from "./CompanySetup";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 type NavItem = { to: string; label: string; icon: typeof Home; full?: boolean; team?: boolean };
 export const NAV: NavItem[] = [
-  { to: "/", label: "Início", icon: Home },
+  { to: "/dashboard", label: "Início", icon: Home },
+  { to: "/contatos", label: "Contatos", icon: Contact },
+  { to: "/propostas", label: "Propostas", icon: FileText },
+  { to: "/configuracoes", label: "Configurações", icon: Settings },
   { to: "/pipeline", label: "Funil", icon: Columns3 },
   { to: "/inbox", label: "Conversas", icon: Inbox },
   { to: "/dialer", label: "Discador", icon: PhoneCall, full: true },
@@ -36,6 +42,7 @@ const TOUR = [
 export function Shell({ children }: { children: ReactNode }) {
   const app = useApp();
   const nav = useNavigate();
+  const queryClient = useQueryClient();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [cmd, setCmd] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -73,7 +80,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
   const Sidebar = (
     <nav className="flex h-full flex-col gap-1 p-3">
-      <Link to="/" className="mb-4 flex items-center gap-2 px-2 pt-1">
+      <Link to="/dashboard" className="mb-4 flex items-center gap-2 px-2 pt-1">
         <span className="grid size-7 place-items-center rounded-md bg-primary text-sm font-bold text-primary-foreground">A</span>
         <span className="text-[15px] font-semibold tracking-tight">Alliar</span>
       </Link>
@@ -105,14 +112,16 @@ export function Shell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-12 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur md:px-5">
           <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobile(true)}><Menu className="size-4" /></Button>
-          <Seg value={app.structure} opts={[["solo", "Solo"], ["equipe", "Equipe"]]} onChange={(v) => app.set({ structure: v as "solo" | "equipe" })} />
+          <Seg disabled={!app.isAdmin} value={app.structure} opts={[["solo", "Solo"], ["equipe", "Equipe"]]} onChange={(v) => app.set({ structure: v as "solo" | "equipe" })} />
           <Seg value={app.view} opts={[["focado", "Focado"], ["completo", "Completo"]]} onChange={(v) => app.set({ view: v as "focado" | "completo" })} />
+          <select aria-label="Empresa ativa" className="ml-2 max-w-36 rounded-md border bg-background p-1 text-xs" value={app.tenantId??""} onChange={e=>app.switchTenant(e.target.value)}>{app.tenants.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}</select>
+          <Button variant="ghost" size="icon" aria-label="Sair" title="Sair" onClick={async()=>{await queryClient.cancelQueries();queryClient.clear();await supabase.auth.signOut();await nav({to:"/auth",replace:true});}}><LogOut className="size-4"/></Button>
           <div className="ml-auto hidden items-center gap-1 text-[11px] text-muted-foreground lg:flex"><kbd>J</kbd><kbd>K</kbd> navegar · <kbd>1</kbd> PIX · <kbd>2</kbd> retorno · <kbd>3</kbd> ganho</div>
           <Button variant="ghost" size="icon" className="ml-auto lg:ml-2" onClick={() => app.set({ theme: app.theme === "dark" ? "light" : "dark" })}>
             {app.theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </Button>
         </header>
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main className="flex-1 p-4 md:p-6">{app.loading ? <p className="text-sm text-muted-foreground">Carregando sua empresa…</p> : app.error ? <div role="alert"><p>Não foi possível carregar os dados.</p><Button onClick={()=>app.refresh()}>Tentar novamente</Button></div> : !app.tenantId ? <CompanySetup /> : children}</main>
       </div>
       <LeadSheet />
       <CommandDialog open={cmd} onOpenChange={setCmd}>
@@ -133,7 +142,7 @@ export function Shell({ children }: { children: ReactNode }) {
       </CommandDialog>
       <Dialog open={!app.tourDone || tour > 0} onOpenChange={(o) => { if (!o) { app.set({ tourDone: true }); setTour(0); } }}>
         <DialogContent className="max-w-sm">
-          {(() => { const idx = Math.max(tour - 1, 0); const [t, d] = TOUR[idx]!; return (
+          {(() => { const idx = Math.max(tour - 1, 0); const [t, d] = TOUR[idx] ?? TOUR[0] ?? ["Alliar", ""]; return (
             <div className="space-y-4">
               <div className="flex gap-1">{TOUR.map((_, i) => <span key={i} className={cn("h-1 flex-1 rounded-full", i <= idx ? "bg-primary" : "bg-muted")} />)}</div>
               <h2 className="text-lg font-semibold">{t}</h2>
@@ -149,11 +158,11 @@ export function Shell({ children }: { children: ReactNode }) {
   );
 }
 
-function Seg({ value, opts, onChange }: { value: string; opts: [string, string][]; onChange: (v: string) => void }) {
+function Seg({ value, opts, onChange, disabled }: { value: string; opts: [string, string][]; onChange: (v: string) => void; disabled?: boolean }) {
   return (
     <div className="flex rounded-md border p-0.5 text-xs">
       {opts.map(([v, l]) => (
-        <button key={v} onClick={() => onChange(v)} className={cn("rounded px-2 py-1", value === v ? "bg-secondary font-medium" : "text-muted-foreground")}>{l}</button>
+        <Button key={v} disabled={disabled} variant="ghost" size="sm" onClick={() => onChange(v)} className={cn("h-6 rounded px-2 py-1 text-xs", value === v ? "bg-secondary font-medium" : "text-muted-foreground")}>{l}</Button>
       ))}
     </div>
   );

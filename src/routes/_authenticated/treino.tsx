@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/alliar/Shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/treino")({
+export const Route = createFileRoute("/_authenticated/treino")({
   head: () => seo("Treino com IA", "Roleplay de vendas: a IA simula clientes difíceis no WhatsApp e dá nota."),
   component: Train,
 });

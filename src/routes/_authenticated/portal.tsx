@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export const Route = createFileRoute("/portal")({
+export const Route = createFileRoute("/_authenticated/portal")({
   head: () => seo("Pós-venda", "Portal do cliente com link mágico, rastreio de entrega e chamados com SLA."),
   component: Portal,
 });

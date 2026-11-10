@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FileText, MessageCircle, Mic, Phone, QrCode, StickyNote, Eye } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useApp, STAGES } from "@/lib/store";
+import { useApp, STAGES, type Lead } from "@/lib/store";
 import { brl } from "@/lib/pix";
 import { VoiceButton } from "./Voice";
 import { PixDialog } from "./PixDialog";
@@ -40,6 +40,7 @@ export function LeadSheet() {
             <div className="flex flex-wrap gap-2">
               <Button size="sm" onClick={() => setPix(true)}><QrCode className="size-3.5" />Proposta + PIX <kbd>1</kbd></Button>
               <Button size="sm" variant="secondary" onClick={() => { updateLead(lead.id, { stage: "contato" }); addEvent(lead.id, { kind: "nota", text: "Retorno agendado para amanhã 10h" }); }}>Retorno <kbd>2</kbd></Button>
+              <label className="block text-sm">Etapa<select aria-label="Etapa do negócio" value={lead.stage} className="ml-2 rounded-md border bg-background p-2" onChange={e=>updateLead(lead.id,{stage:e.target.value as Lead["stage"]})}>{STAGES.map(s=><option key={s.id} value={s.id}>{s.label}</option>)}</select></label>
               <VoiceButton onText={(t) => addEvent(lead.id, { kind: "audio", text: `Resumo de voz: ${t}` })} />
             </div>
             <div>
