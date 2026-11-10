@@ -431,6 +431,17 @@ export type Database = {
     }
     Functions: {
       accept_invitation: { Args: { invite_token: string }; Returns: string }
+      create_lead: {
+        Args: {
+          contact_company: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+          deal_value: number
+          t: string
+        }
+        Returns: string
+      }
       create_tenant: { Args: { company_name: string }; Returns: string }
       is_member: { Args: { t: string }; Returns: boolean }
       is_tenant_admin: { Args: { t: string }; Returns: boolean }
