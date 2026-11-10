@@ -3,4 +3,4 @@
 - [x] Login, cadastro, recuperação e saída.
 - [x] Criar empresas, alternar empresa e aceitar convites.
 - [x] Contatos, leads, funil, propostas, comissões e configurações persistentes.
-- [x] Testes de isolamento e fluxo completo com dados reais.
+- [ ] Testes de isolamento e fluxo completo com dados reais.
