@@ -1,0 +1,8 @@
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
+import { useApp } from '@/lib/store';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog,DialogContent,DialogHeader,DialogTitle } from '@/components/ui/dialog';
+export function NewLead(){const app=useApp();const [open,setOpen]=useState(false);const [busy,setBusy]=useState(false);return <><Button onClick={()=>setOpen(true)}><Plus/>Novo negócio</Button><Dialog open={open} onOpenChange={setOpen}><DialogContent><DialogHeader><DialogTitle>Novo negócio</DialogTitle></DialogHeader><form className="space-y-3" onSubmit={async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));setBusy(true);try{await app.addLead(data);setOpen(false);toast.success('Negócio salvo');}catch(err){toast.error(err instanceof Error?err.message:'Não foi possível salvar');}finally{setBusy(false);}}}>{[['name','Nome do contato'],['company','Empresa do contato'],['phone','Telefone'],['email','E-mail'],['value','Valor do negócio']].map(([name,label])=><label key={name} className="block text-sm">{label}<Input name={name} type={name==='value'?'number':name==='email'?'email':'text'} min={name==='value'?0:undefined} max={name==='value'?999999999:undefined} step={name==='value'?'0.01':undefined} maxLength={name==='email'?254:name==='phone'?40:120} required={name==='name'||name==='value'} defaultValue={name==='value'?0:''} className="mt-1"/></label>)}<Button disabled={busy}>Salvar negócio</Button></form></DialogContent></Dialog></>;}

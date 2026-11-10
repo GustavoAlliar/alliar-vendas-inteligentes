@@ -10,90 +10,126 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DialerRouteImport } from './routes/dialer'
-import { Route as EquipeRouteImport } from './routes/equipe'
-import { Route as InboxRouteImport } from './routes/inbox'
-import { Route as IndicacoesRouteImport } from './routes/indicacoes'
-import { Route as PipelineRouteImport } from './routes/pipeline'
-import { Route as PortalRouteImport } from './routes/portal'
-import { Route as TreinoRouteImport } from './routes/treino'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDialerRouteImport } from './routes/_authenticated/dialer'
+import { Route as AuthenticatedEquipeRouteImport } from './routes/_authenticated/equipe'
+import { Route as AuthenticatedInboxRouteImport } from './routes/_authenticated/inbox'
+import { Route as AuthenticatedIndicacoesRouteImport } from './routes/_authenticated/indicacoes'
+import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
+import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated/portal'
+import { Route as AuthenticatedTreinoRouteImport } from './routes/_authenticated/treino'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DialerRoute = DialerRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDialerRoute = AuthenticatedDialerRouteImport.update({
   id: '/dialer',
   path: '/dialer',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const EquipeRoute = EquipeRouteImport.update({
+const AuthenticatedEquipeRoute = AuthenticatedEquipeRouteImport.update({
   id: '/equipe',
   path: '/equipe',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const InboxRoute = InboxRouteImport.update({
+const AuthenticatedInboxRoute = AuthenticatedInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const IndicacoesRoute = IndicacoesRouteImport.update({
+const AuthenticatedIndicacoesRoute = AuthenticatedIndicacoesRouteImport.update({
   id: '/indicacoes',
   path: '/indicacoes',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const PipelineRoute = PipelineRouteImport.update({
+const AuthenticatedPipelineRoute = AuthenticatedPipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const PortalRoute = PortalRouteImport.update({
+const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
   id: '/portal',
   path: '/portal',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const TreinoRoute = TreinoRouteImport.update({
+const AuthenticatedTreinoRoute = AuthenticatedTreinoRouteImport.update({
   id: '/treino',
   path: '/treino',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dialer': typeof DialerRoute
-  '/equipe': typeof EquipeRoute
-  '/inbox': typeof InboxRoute
-  '/indicacoes': typeof IndicacoesRoute
-  '/pipeline': typeof PipelineRoute
-  '/portal': typeof PortalRoute
-  '/treino': typeof TreinoRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dialer': typeof AuthenticatedDialerRoute
+  '/equipe': typeof AuthenticatedEquipeRoute
+  '/inbox': typeof AuthenticatedInboxRoute
+  '/indicacoes': typeof AuthenticatedIndicacoesRoute
+  '/pipeline': typeof AuthenticatedPipelineRoute
+  '/portal': typeof AuthenticatedPortalRoute
+  '/treino': typeof AuthenticatedTreinoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dialer': typeof DialerRoute
-  '/equipe': typeof EquipeRoute
-  '/inbox': typeof InboxRoute
-  '/indicacoes': typeof IndicacoesRoute
-  '/pipeline': typeof PipelineRoute
-  '/portal': typeof PortalRoute
-  '/treino': typeof TreinoRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dialer': typeof AuthenticatedDialerRoute
+  '/equipe': typeof AuthenticatedEquipeRoute
+  '/inbox': typeof AuthenticatedInboxRoute
+  '/indicacoes': typeof AuthenticatedIndicacoesRoute
+  '/pipeline': typeof AuthenticatedPipelineRoute
+  '/portal': typeof AuthenticatedPortalRoute
+  '/treino': typeof AuthenticatedTreinoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dialer': typeof DialerRoute
-  '/equipe': typeof EquipeRoute
-  '/inbox': typeof InboxRoute
-  '/indicacoes': typeof IndicacoesRoute
-  '/pipeline': typeof PipelineRoute
-  '/portal': typeof PortalRoute
-  '/treino': typeof TreinoRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/dialer': typeof AuthenticatedDialerRoute
+  '/_authenticated/equipe': typeof AuthenticatedEquipeRoute
+  '/_authenticated/inbox': typeof AuthenticatedInboxRoute
+  '/_authenticated/indicacoes': typeof AuthenticatedIndicacoesRoute
+  '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
+  '/_authenticated/portal': typeof AuthenticatedPortalRoute
+  '/_authenticated/treino': typeof AuthenticatedTreinoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
     | '/dialer'
     | '/equipe'
     | '/inbox'
@@ -104,6 +140,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
     | '/dialer'
     | '/equipe'
     | '/inbox'
@@ -114,24 +153,24 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/dialer'
-    | '/equipe'
-    | '/inbox'
-    | '/indicacoes'
-    | '/pipeline'
-    | '/portal'
-    | '/treino'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/dialer'
+    | '/_authenticated/equipe'
+    | '/_authenticated/inbox'
+    | '/_authenticated/indicacoes'
+    | '/_authenticated/pipeline'
+    | '/_authenticated/portal'
+    | '/_authenticated/treino'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DialerRoute: typeof DialerRoute
-  EquipeRoute: typeof EquipeRoute
-  InboxRoute: typeof InboxRoute
-  IndicacoesRoute: typeof IndicacoesRoute
-  PipelineRoute: typeof PipelineRoute
-  PortalRoute: typeof PortalRoute
-  TreinoRoute: typeof TreinoRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -143,67 +182,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dialer': {
-      id: '/dialer'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dialer': {
+      id: '/_authenticated/dialer'
       path: '/dialer'
       fullPath: '/dialer'
-      preLoaderRoute: typeof DialerRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedDialerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/equipe': {
-      id: '/equipe'
+    '/_authenticated/equipe': {
+      id: '/_authenticated/equipe'
       path: '/equipe'
       fullPath: '/equipe'
-      preLoaderRoute: typeof EquipeRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedEquipeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/inbox': {
-      id: '/inbox'
+    '/_authenticated/inbox': {
+      id: '/_authenticated/inbox'
       path: '/inbox'
       fullPath: '/inbox'
-      preLoaderRoute: typeof InboxRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedInboxRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/indicacoes': {
-      id: '/indicacoes'
+    '/_authenticated/indicacoes': {
+      id: '/_authenticated/indicacoes'
       path: '/indicacoes'
       fullPath: '/indicacoes'
-      preLoaderRoute: typeof IndicacoesRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndicacoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/pipeline': {
-      id: '/pipeline'
+    '/_authenticated/pipeline': {
+      id: '/_authenticated/pipeline'
       path: '/pipeline'
       fullPath: '/pipeline'
-      preLoaderRoute: typeof PipelineRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedPipelineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/portal': {
-      id: '/portal'
+    '/_authenticated/portal': {
+      id: '/_authenticated/portal'
       path: '/portal'
       fullPath: '/portal'
-      preLoaderRoute: typeof PortalRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedPortalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/treino': {
-      id: '/treino'
+    '/_authenticated/treino': {
+      id: '/_authenticated/treino'
       path: '/treino'
       fullPath: '/treino'
-      preLoaderRoute: typeof TreinoRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTreinoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDialerRoute: typeof AuthenticatedDialerRoute
+  AuthenticatedEquipeRoute: typeof AuthenticatedEquipeRoute
+  AuthenticatedInboxRoute: typeof AuthenticatedInboxRoute
+  AuthenticatedIndicacoesRoute: typeof AuthenticatedIndicacoesRoute
+  AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
+  AuthenticatedPortalRoute: typeof AuthenticatedPortalRoute
+  AuthenticatedTreinoRoute: typeof AuthenticatedTreinoRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDialerRoute: AuthenticatedDialerRoute,
+  AuthenticatedEquipeRoute: AuthenticatedEquipeRoute,
+  AuthenticatedInboxRoute: AuthenticatedInboxRoute,
+  AuthenticatedIndicacoesRoute: AuthenticatedIndicacoesRoute,
+  AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
+  AuthenticatedPortalRoute: AuthenticatedPortalRoute,
+  AuthenticatedTreinoRoute: AuthenticatedTreinoRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DialerRoute: DialerRoute,
-  EquipeRoute: EquipeRoute,
-  InboxRoute: InboxRoute,
-  IndicacoesRoute: IndicacoesRoute,
-  PipelineRoute: PipelineRoute,
-  PortalRoute: PortalRoute,
-  TreinoRoute: TreinoRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

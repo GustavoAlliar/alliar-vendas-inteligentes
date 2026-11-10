@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { NewLead } from "@/components/alliar/NewLead";
 import { useState } from "react";
 import { Eye } from "lucide-react";
 import { useApp, STAGES, type Stage } from "@/lib/store";
@@ -15,19 +16,19 @@ export const Route = createFileRoute("/_authenticated/pipeline")({
 });
 
 function Pipeline() {
-  const { leads, updateLead, select, selected, structure } = useApp();
+  const { leads, updateLead, select, selected, structure, stages } = useApp();
   const [over, setOver] = useState<Stage | null>(null);
   return (
     <div>
-      <PageHeader title="Funil" sub="Arraste os cartões entre colunas. Clique para ver o raio-X." />
+      <PageHeader title="Funil" sub="Seus negócios por etapa"><NewLead/></PageHeader>
       <div className="flex gap-3 overflow-x-auto pb-4">
-        {STAGES.map((s) => {
+        {(stages.length ? stages : STAGES).map((s) => {
           const col = leads.filter((l) => l.stage === s.id);
           return (
             <div key={s.id}
-              onDragOver={(e) => { e.preventDefault(); setOver(s.id); }}
+              onDragOver={(e) => { e.preventDefault(); setOver(s.id as Stage); }}
               onDragLeave={() => setOver(null)}
-              onDrop={(e) => { const id = e.dataTransfer.getData("id"); updateLead(id, { stage: s.id }); if (s.id === "ganho") beep(990); setOver(null); }}
+              onDrop={(e) => { const id = e.dataTransfer.getData("id"); updateLead(id, { stage: s.id as Stage }); if (s.id === "ganho") beep(990); setOver(null); }}
               className={cn("flex w-64 shrink-0 flex-col rounded-lg bg-muted/40 p-2", over === s.id && "ring-1 ring-primary")}>
               <div className="flex items-center justify-between px-1 pb-2 text-xs">
                 <span className="font-medium">{s.label} <span className="text-muted-foreground">{col.length}</span></span>
