@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/alliar/Shell";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/dialer")({
+export const Route = createFileRoute("/_authenticated/dialer")({
   head: () => seo("Discador", "Click-to-call com teleprompter de IA ao vivo e envio de PIX durante a chamada."),
   component: Dialer,
 });

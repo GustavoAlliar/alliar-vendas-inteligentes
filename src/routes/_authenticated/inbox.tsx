@@ -9,7 +9,7 @@ import { useVoice } from "@/components/alliar/Voice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/inbox")({
+export const Route = createFileRoute("/_authenticated/inbox")({
   head: () => seo("Conversas WhatsApp", "Caixa de entrada multi-atendente com áudios, respostas rápidas e copiloto de IA."),
   component: InboxPage,
 });

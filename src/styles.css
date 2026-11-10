@@ -141,3 +141,7 @@
   }
   kbd { font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--color-border); background: var(--color-muted); color: var(--color-muted-foreground); }
 }
+
+.google-auth { background: var(--google-bg); color: var(--google-fg); border-color: var(--google-border); }
+:root { --google-bg: oklch(1 0 0); --google-fg: oklch(0.239 0 0); --google-border: oklch(0.565 0.006 140); }
+.dark { --google-bg: oklch(0.188 0.002 280); --google-fg: oklch(0.916 0.002 130); --google-border: oklch(0.651 0.006 140); }

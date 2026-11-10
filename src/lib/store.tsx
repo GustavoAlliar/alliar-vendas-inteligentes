@@ -1,80 +1,30 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-
-export type Stage = "novo" | "contato" | "proposta" | "negociacao" | "ganho";
-export const STAGES: { id: Stage; label: string }[] = [
-  { id: "novo", label: "Novos" },
-  { id: "contato", label: "Em contato" },
-  { id: "proposta", label: "Proposta enviada" },
-  { id: "negociacao", label: "Negociação" },
-  { id: "ganho", label: "Ganho" },
-];
-export type Event = { at: string; kind: "msg" | "call" | "proposta" | "audio" | "pix" | "nota"; text: string };
-export type Lead = {
-  id: string; name: string; company: string; phone: string; value: number;
-  stage: Stage; temp: "quente" | "morno" | "frio"; priority: "alta" | "média" | "baixa";
-  owner: string; lastContact: string; proposalOpen?: boolean; timeline: Event[];
-};
-
-const seed: Lead[] = [
-  ["Mariana Costa", "Clínica Sorriso", 4800, "negociacao", "quente", "alta", "Você"],
-  ["Rafael Lima", "Lima Contabilidade", 2200, "proposta", "quente", "alta", "Ana"],
-  ["Juliana Alves", "Estúdio Ju Pilates", 1500, "contato", "morno", "média", "Você"],
-  ["Carlos Souza", "Souza Materiais", 9800, "proposta", "morno", "alta", "Bruno"],
-  ["Patrícia Rocha", "Doce Rocha Confeitaria", 750, "novo", "frio", "baixa", "Ana"],
-  ["Diego Martins", "Martins Auto Peças", 3600, "contato", "quente", "média", "Bruno"],
-  ["Fernanda Dias", "FD Arquitetura", 6200, "negociacao", "morno", "alta", "Você"],
-  ["Lucas Ferreira", "Academia Fit+", 2900, "novo", "morno", "média", "Ana"],
-  ["Beatriz Nunes", "Pet Shop Amigo", 1200, "ganho", "quente", "baixa", "Você"],
-].map(([name, company, value, stage, temp, priority, owner], i) => ({
-  id: `l${i + 1}`, name: name as string, company: company as string, value: value as number,
-  stage: stage as Stage, temp: temp as Lead["temp"], priority: priority as Lead["priority"], owner: owner as string,
-  phone: `(11) 9${8000 + i * 137}-${1000 + i * 311}`, lastContact: `${i + 1}d atrás`,
-  proposalOpen: i === 1,
-  timeline: [
-    { at: "há 5 dias", kind: "msg", text: "Primeiro contato pelo WhatsApp (anúncio Instagram)" },
-    { at: "há 3 dias", kind: "call", text: "Ligação de 6 min — interesse no plano anual" },
-    { at: "há 1 dia", kind: "proposta", text: "Proposta enviada · aberta 2x" },
-  ],
-}));
-
-type Settings = { structure: "solo" | "equipe"; view: "focado" | "completo"; theme: "dark" | "light"; tourDone: boolean };
-type Ctx = Settings & {
-  set: (p: Partial<Settings>) => void;
-  leads: Lead[];
-  updateLead: (id: string, p: Partial<Lead>) => void;
-  addEvent: (id: string, e: Omit<Event, "at">) => void;
-  selected: string | null; select: (id: string | null) => void;
-};
-const C = createContext<Ctx | null>(null);
-
-export function AppProvider({ children }: { children: ReactNode }) {
-  const [s, setS] = useState<Settings>({ structure: "solo", view: "focado", theme: "dark", tourDone: true });
-  const [leads, setLeads] = useState<Lead[]>(seed);
-  const [selected, select] = useState<string | null>(null);
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("alliar:settings");
-      setS(raw ? JSON.parse(raw) : { structure: "solo", view: "focado", theme: "dark", tourDone: false });
-      const l = localStorage.getItem("alliar:leads");
-      if (l) setLeads(JSON.parse(l));
-    } catch { /* ignore */ }
-  }, []);
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", s.theme === "dark");
-    localStorage.setItem("alliar:settings", JSON.stringify(s));
-  }, [s]);
-  useEffect(() => { localStorage.setItem("alliar:leads", JSON.stringify(leads)); }, [leads]);
-  const updateLead = (id: string, p: Partial<Lead>) => setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, ...p } : l)));
-  const addEvent = (id: string, e: Omit<Event, "at">) =>
-    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, timeline: [...l.timeline, { ...e, at: "agora" }] } : l)));
-  return (
-    <C.Provider value={{ ...s, set: (p) => setS((o) => ({ ...o, ...p })), leads, updateLead, addEvent, selected, select }}>
-      {children}
-    </C.Provider>
-  );
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './auth';
+import { contactSchema } from './crm-schemas';
+export type Stage = 'novo'|'contato'|'proposta'|'negociacao'|'ganho';
+export const STAGES: {id:Stage;label:string}[]=[{id:'novo',label:'Novos'},{id:'contato',label:'Em contato'},{id:'proposta',label:'Proposta enviada'},{id:'negociacao',label:'Negociação'},{id:'ganho',label:'Ganho'}];
+export type Event={at:string;kind:'msg'|'call'|'proposta'|'audio'|'pix'|'nota';text:string};
+export type Lead={id:string;contactId?:string;name:string;company:string;phone:string;value:number;stage:Stage;temp:'quente'|'morno'|'frio';priority:'alta'|'média'|'baixa';owner:string;ownerId?:string;lastContact:string;proposalOpen?:boolean;timeline:Event[]};
+type Settings={structure:'solo'|'equipe';view:'focado'|'completo';theme:'dark'|'light';tourDone:boolean};
+function useStateData(){
+ const {user}=useAuth();const query=useQueryClient();const [tenantId,setTenant]=useState<string|null>(null);const [selected,select]=useState<string|null>(null);
+ const tenants=useQuery({queryKey:['tenants',user?.id],enabled:!!user,queryFn:async()=>{const {data,error}=await supabase.from('tenants').select('*').order('created_at');if(error)throw error;return data;}});
+ const active=tenantId??tenants.data?.[0]?.id??null;
+ const state=useQuery({queryKey:['crm',user?.id,active],enabled:!!active&&!!user,queryFn:async()=>{if(!active||!user)throw Error('Empresa necessária');const results=await Promise.all([supabase.from('leads').select('*,contacts(*)').eq('tenant_id',active).order('created_at').limit(1000),supabase.from('lead_events').select('*').eq('tenant_id',active).order('created_at').limit(1000),supabase.from('tenant_settings').select('*').eq('tenant_id',active).single(),supabase.from('user_preferences').select('*').eq('user_id',user.id).maybeSingle(),supabase.from('user_roles').select('*').eq('tenant_id',active),supabase.from('pipeline_stages').select('*').eq('tenant_id',active).order('position')]);for(const r of results)if(r.error)throw r.error;const [ls,es,settings,prefs,roles,stages]=results;return {leads:(ls.data??[]).map(l=>({id:l.id,contactId:l.contact_id,name:l.contacts?.name??'',company:l.contacts?.company??'',phone:l.contacts?.phone??'',value:Number(l.value),stage:l.stage as Stage,temp:l.temp as Lead['temp'],priority:l.priority as Lead['priority'],owner:l.owner_id===user.id?'Você':`Membro ${l.owner_id.slice(0,6)}`,ownerId:l.owner_id,lastContact:new Date(l.updated_at).toLocaleDateString('pt-BR'),timeline:(es.data??[]).filter(e=>e.lead_id===l.id).map(e=>({kind:e.kind as Event['kind'],text:e.text,at:new Date(e.created_at).toLocaleString('pt-BR')}))})),settings:settings.data,prefs:prefs.data,roles:roles.data??[],stages:stages.data??[]};}});
+ const isAdmin=state.data?.roles.some(r=>r.user_id===user?.id&&r.role==='admin')??false;
+ const settings:Settings={structure:(state.data?.settings?.structure??'solo') as Settings['structure'],view:(state.data?.prefs?.view??'focado') as Settings['view'],theme:(state.data?.prefs?.theme??'dark') as Settings['theme'],tourDone:state.data?.prefs?.tour_done??true};
+ useEffect(()=>{document.documentElement.classList.toggle('dark',settings.theme==='dark');},[settings.theme]);
+ async function refresh(){await query.invalidateQueries({queryKey:['crm',user?.id,active]});}
+ const report=(e:unknown)=>toast.error(e instanceof Error?e.message:'Não foi possível salvar. Tente novamente.');
+ async function set(p:Partial<Settings>){try{if(!user||!active)return;if(p.structure){if(!isAdmin)throw Error('Somente o administrador pode alterar o modo da empresa');const {error}=await supabase.from('tenant_settings').update({structure:p.structure}).eq('tenant_id',active);if(error)throw error;}const {error}=await supabase.from('user_preferences').upsert({user_id:user.id,view:p.view??settings.view,theme:p.theme??settings.theme,tour_done:p.tourDone??settings.tourDone});if(error)throw error;await refresh();}catch(e){report(e);}}
+ async function updateLead(id:string,p:Partial<Lead>){try{if(!active)return;const {error}=await supabase.from('leads').update({...(p.stage?{stage:p.stage}:{}),...(p.value!==undefined?{value:p.value}:{}),...(p.temp?{temp:p.temp}:{}),...(p.priority?{priority:p.priority}:{}),...(p.ownerId?{owner_id:p.ownerId}:{})}).eq('tenant_id',active).eq('id',id);if(error)throw error;await refresh();}catch(e){report(e);}}
+ async function addEvent(id:string,e:Omit<Event,'at'>){try{if(!active)return;const {error}=await supabase.from('lead_events').insert({tenant_id:active,lead_id:id,...e});if(error)throw error;await refresh();}catch(e){report(e);}}
+ async function addLead(input:unknown){if(!active)throw Error('Selecione uma empresa');const p=contactSchema.parse(input);const {error}=await supabase.rpc('create_lead',{t:active,contact_name:p.name,contact_company:p.company,contact_phone:p.phone,contact_email:p.email,deal_value:p.value});if(error)throw error;await refresh();}
+ return {...settings,set,leads:state.data?.leads??[],updateLead,addEvent,addLead,selected,select,tenantId:active,tenants:tenants.data??[],switchTenant:(id:string)=>{select(null);setTenant(id);},isAdmin,loading:tenants.isPending||(!!active&&state.isPending),error:tenants.error??state.error,refresh,stages:state.data?.stages??[],pixKey:state.data?.settings?.pix_key??''};
 }
-export function useApp() {
-  const c = useContext(C);
-  if (!c) throw new Error("useApp fora do AppProvider");
-  return c;
-}
+type Ctx=ReturnType<typeof useStateData>;const C=createContext<Ctx|null>(null);
+export function AppProvider({children}:{children:ReactNode}){const data=useStateData();return <C.Provider value={data}>{children}</C.Provider>;}
+export function useApp(){const c=useContext(C);if(!c)throw Error('useApp fora do AppProvider');return c;}

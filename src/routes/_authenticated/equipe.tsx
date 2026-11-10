@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/alliar/Shell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
-export const Route = createFileRoute("/equipe")({
+export const Route = createFileRoute("/_authenticated/equipe")({
   head: () => seo("Equipe e metas", "Round-robin com SLA anti-vácuo, metas e comissões transparentes."),
   component: Team,
 });

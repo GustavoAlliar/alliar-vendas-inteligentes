@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/alliar/Shell";
 import { PriorityBadge, TempBadge } from "@/components/alliar/Badges";
 
-export const Route = createFileRoute("/pipeline")({
+export const Route = createFileRoute("/_authenticated/pipeline")({
   head: () => seo("Funil de vendas", "Pipeline Kanban com temperatura, prioridade e raio-X do lead em 5 segundos."),
   component: Pipeline,
 });

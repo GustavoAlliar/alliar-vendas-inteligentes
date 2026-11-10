@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/alliar/Shell";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/indicacoes")({
+export const Route = createFileRoute("/_authenticated/indicacoes")({
   head: () => seo("Indicações", "Programa Member-Get-Member com cashback e painel de recompensas."),
   component: Referral,
 });
