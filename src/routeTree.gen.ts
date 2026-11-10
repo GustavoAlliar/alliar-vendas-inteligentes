@@ -23,6 +23,7 @@ import { Route as AuthenticatedInboxRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedIndicacoesRouteImport } from './routes/_authenticated/indicacoes'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
 import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated/portal'
+import { Route as AuthenticatedPropostasRouteImport } from './routes/_authenticated/propostas'
 import { Route as AuthenticatedTreinoRouteImport } from './routes/_authenticated/treino'
 
 const IndexRoute = IndexRouteImport.update({
@@ -95,6 +96,11 @@ const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
   path: '/portal',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPropostasRoute = AuthenticatedPropostasRouteImport.update({
+  id: '/propostas',
+  path: '/propostas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTreinoRoute = AuthenticatedTreinoRouteImport.update({
   id: '/treino',
   path: '/treino',
@@ -115,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/indicacoes': typeof AuthenticatedIndicacoesRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/portal': typeof AuthenticatedPortalRoute
+  '/propostas': typeof AuthenticatedPropostasRoute
   '/treino': typeof AuthenticatedTreinoRoute
 }
 export interface FileRoutesByTo {
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/indicacoes': typeof AuthenticatedIndicacoesRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/portal': typeof AuthenticatedPortalRoute
+  '/propostas': typeof AuthenticatedPropostasRoute
   '/treino': typeof AuthenticatedTreinoRoute
 }
 export interface FileRoutesById {
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated/indicacoes': typeof AuthenticatedIndicacoesRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
   '/_authenticated/portal': typeof AuthenticatedPortalRoute
+  '/_authenticated/propostas': typeof AuthenticatedPropostasRoute
   '/_authenticated/treino': typeof AuthenticatedTreinoRoute
 }
 export interface FileRouteTypes {
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/indicacoes'
     | '/pipeline'
     | '/portal'
+    | '/propostas'
     | '/treino'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/indicacoes'
     | '/pipeline'
     | '/portal'
+    | '/propostas'
     | '/treino'
   id:
     | '__root__'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/_authenticated/indicacoes'
     | '/_authenticated/pipeline'
     | '/_authenticated/portal'
+    | '/_authenticated/propostas'
     | '/_authenticated/treino'
   fileRoutesById: FileRoutesById
 }
@@ -311,6 +323,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/propostas': {
+      id: '/_authenticated/propostas'
+      path: '/propostas'
+      fullPath: '/propostas'
+      preLoaderRoute: typeof AuthenticatedPropostasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/treino': {
       id: '/_authenticated/treino'
       path: '/treino'
@@ -331,6 +350,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndicacoesRoute: typeof AuthenticatedIndicacoesRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
   AuthenticatedPortalRoute: typeof AuthenticatedPortalRoute
+  AuthenticatedPropostasRoute: typeof AuthenticatedPropostasRoute
   AuthenticatedTreinoRoute: typeof AuthenticatedTreinoRoute
 }
 
@@ -344,6 +364,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndicacoesRoute: AuthenticatedIndicacoesRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
   AuthenticatedPortalRoute: AuthenticatedPortalRoute,
+  AuthenticatedPropostasRoute: AuthenticatedPropostasRoute,
   AuthenticatedTreinoRoute: AuthenticatedTreinoRoute,
 }
 

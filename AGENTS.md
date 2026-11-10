@@ -29,5 +29,8 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 
-- Alliar app state (leads, Solo/Equipe, Focado/Completo, theme) lives in src/lib/store.tsx context persisted to localStorage; demo has no backend yet, so move to Lovable Cloud when real data/auth is needed.
+- Alliar business data is persisted in Cloud with tenant-scoped RLS; src/lib/store.tsx adapts queries for existing screens, never browser storage, to prevent demo/tenant mixing.
+- Signed-in content lives under the managed _authenticated layout; public auth/reset/invite routes remain outside so redirects and recovery work.
+- Tenant membership and roles live only in user_roles; privileged membership changes use authenticated SQL functions so clients cannot self-promote.
+- Contact + lead creation and earned commissions are transactional SQL functions/triggers to avoid partial saves and duplicate accruals.
 - Business rules (discount approval, round-robin, PIX payload) are pure functions in src/lib/rules.ts and src/lib/pix.ts so they stay unit-tested.

@@ -1,42 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Shuffle, Timer } from "lucide-react";
-import { toast } from "sonner";
-import { seo } from "@/lib/seo";
-import { brl } from "@/lib/pix";
-import { nextRoundRobin, SLA_MINUTES } from "@/lib/rules";
-import { PageHeader } from "@/components/alliar/Shell";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-
-export const Route = createFileRoute("/_authenticated/equipe")({
-  head: () => seo("Equipe e metas", "Round-robin com SLA anti-vácuo, metas e comissões transparentes."),
-  component: Team,
-});
-
-const TEAM = [
-  { n: "Você", sold: 18400, goal: 25000, rate: 8 },
-  { n: "Ana", sold: 22100, goal: 25000, rate: 8 },
-  { n: "Bruno", sold: 12900, goal: 20000, rate: 7 },
-];
-
-function Team() {
-  const [idx, setIdx] = useState(0);
-  return (
-    <div className="mx-auto max-w-4xl space-y-4">
-      <PageHeader title="Equipe & metas" sub="Distribuição justa, ninguém fica no vácuo.">
-        <Button size="sm" variant="secondary" onClick={() => { const n = nextRoundRobin(TEAM.map((t) => t.n), idx); setIdx(n); toast.success(`Novo lead distribuído para ${TEAM[n]!.n}`); }}><Shuffle className="size-3.5" />Simular novo lead</Button>
-      </PageHeader>
-      <div className="flex items-center gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 text-xs"><Timer className="size-4 text-warning" />SLA anti-vácuo: lead sem resposta em {SLA_MINUTES} min passa automaticamente para o próximo da fila.</div>
-      <section className="rounded-lg border bg-card">
-        {TEAM.map((t, i) => (
-          <div key={t.n} className="grid grid-cols-[1fr_2fr_auto] items-center gap-4 border-b px-4 py-3 last:border-0">
-            <div className="text-sm font-medium">{t.n} {i === (idx + 1) % TEAM.length && <span className="ml-1 rounded bg-primary/15 px-1.5 text-[10px] text-primary">próximo</span>}</div>
-            <div><Progress value={(t.sold / t.goal) * 100} /><div className="mt-1 text-xs text-muted-foreground">{brl(t.sold)} de {brl(t.goal)}</div></div>
-            <div className="text-right text-sm"><div className="font-semibold text-primary">{brl((t.sold * t.rate) / 100)}</div><div className="text-[10px] text-muted-foreground">comissão {t.rate}%</div></div>
-          </div>
-        ))}
-      </section>
-    </div>
-  );
-}
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useApp } from '@/lib/store';
+import { useAuth } from '@/lib/auth';
+import { seo } from '@/lib/seo';
+import { brl } from '@/lib/pix';
+import { PageHeader } from '@/components/alliar/Shell';
+import { Button } from '@/components/ui/button';
+export const Route=createFileRoute('/_authenticated/equipe')({head:()=>seo('Equipe e comissões','Consulte a equipe e as comissões reais das vendas ganhas na Alliar.'),component:Team});
+function Team(){const app=useApp();const {user}=useAuth();const query=useQueryClient();const roles=useQuery({queryKey:['roles',app.tenantId],queryFn:async()=>{const {data,error}=await supabase.from('user_roles').select('*').eq('tenant_id',app.tenantId??'');if(error)throw error;return data;}});const commissions=useQuery({queryKey:['commissions',app.tenantId],queryFn:async()=>{const {data,error}=await supabase.from('commissions').select('*').eq('tenant_id',app.tenantId??'').limit(1000);if(error)throw error;return data;}});return <div className="mx-auto max-w-5xl space-y-8"><PageHeader title="Equipe & comissões">{app.isAdmin&&<Button asChild variant="outline"><Link to="/configuracoes">Convidar membro</Link></Button>}</PageHeader><section><h2 className="mb-3 font-semibold">Equipe</h2>{roles.error?<p>Não foi possível carregar a equipe.</p>:roles.data?.map(r=><div key={r.id} className="flex justify-between border-b py-3 text-sm"><span>{r.user_id===user?.id?'Você':`Membro ${r.user_id.slice(0,6)}`}</span><span className="text-muted-foreground">{r.role==='admin'?'Administrador':'Vendedor'}</span></div>)}</section><section><h2 className="mb-3 font-semibold">Comissões</h2><p className="mb-4 text-sm text-muted-foreground">Pendente: {brl((commissions.data??[]).filter(c=>c.status==='pending').reduce((s,c)=>s+c.amount,0))}</p>{commissions.isPending?<p>Carregando…</p>:commissions.error?<p role="alert">Não foi possível carregar as comissões.</p>:!commissions.data?.length?<p className="text-sm text-muted-foreground">Nenhuma comissão registrada.</p>:commissions.data.map(c=><div key={c.id} className="flex flex-wrap items-center gap-4 border-b py-3 text-sm"><span className="flex-1">{app.leads.find(l=>l.id===c.lead_id)?.name??'Negócio'}</span><span>{c.rate}%</span><span className="font-semibold">{brl(c.amount)}</span><span>{c.status==='paid'?'Paga':'Pendente'}</span>{app.isAdmin&&c.status==='pending'&&<Button size="sm" variant="outline" onClick={async()=>{const {error}=await supabase.from('commissions').update({status:'paid'}).eq('tenant_id',app.tenantId??'').eq('id',c.id);if(error)toast.error('Não foi possível registrar o pagamento');else{await query.invalidateQueries({queryKey:['commissions']});toast.success('Comissão marcada como paga');}}}>Registrar pagamento</Button>}</div>)}</section></div>;}
