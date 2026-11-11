@@ -61,27 +61,42 @@ export type Database = {
       }
       contacts: {
         Row: {
+          cnae: string
+          cnpj: string
           company: string
           email: string
+          endereco: string
           id: string
           name: string
           phone: string
+          razao_social: string
+          socios: Json
           tenant_id: string
         }
         Insert: {
+          cnae?: string
+          cnpj?: string
           company?: string
           email?: string
+          endereco?: string
           id?: string
           name: string
           phone?: string
+          razao_social?: string
+          socios?: Json
           tenant_id: string
         }
         Update: {
+          cnae?: string
+          cnpj?: string
           company?: string
           email?: string
+          endereco?: string
           id?: string
           name?: string
           phone?: string
+          razao_social?: string
+          socios?: Json
           tenant_id?: string
         }
         Relationships: [
@@ -425,6 +440,102 @@ export type Database = {
           },
         ]
       }
+      whatsapp_messages: {
+        Row: {
+          body: string
+          created_at: string
+          direction: string
+          error: string | null
+          id: string
+          kind: string
+          lead_id: string | null
+          phone: string
+          sent_by: string | null
+          status: string
+          status_at: string | null
+          tenant_id: string | null
+          wa_id: string | null
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          direction: string
+          error?: string | null
+          id?: string
+          kind?: string
+          lead_id?: string | null
+          phone: string
+          sent_by?: string | null
+          status?: string
+          status_at?: string | null
+          tenant_id?: string | null
+          wa_id?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          direction?: string
+          error?: string | null
+          id?: string
+          kind?: string
+          lead_id?: string | null
+          phone?: string
+          sent_by?: string | null
+          status?: string
+          status_at?: string | null
+          tenant_id?: string | null
+          wa_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_messages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "whatsapp_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_webhook_events: {
+        Row: {
+          attempts: number
+          delivery_id: string
+          event: string
+          id: string
+          payload: Json
+          processed_at: string | null
+          processing_error: string | null
+          received_at: string
+        }
+        Insert: {
+          attempts?: number
+          delivery_id: string
+          event: string
+          id?: string
+          payload: Json
+          processed_at?: string | null
+          processing_error?: string | null
+          received_at?: string
+        }
+        Update: {
+          attempts?: number
+          delivery_id?: string
+          event?: string
+          id?: string
+          payload?: Json
+          processed_at?: string | null
+          processing_error?: string | null
+          received_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -445,6 +556,15 @@ export type Database = {
       create_tenant: { Args: { company_name: string }; Returns: string }
       is_member: { Args: { t: string }; Returns: boolean }
       is_tenant_admin: { Args: { t: string }; Returns: boolean }
+      tenant_members: {
+        Args: { t: string }
+        Returns: {
+          display_name: string
+          email: string
+          role: string
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  Columns3, GraduationCap, Gift, Headset, Home, Inbox, Moon, PhoneCall, Search, Sun, Users, LifeBuoy, HelpCircle, Menu, Settings, Contact, FileText, LogOut,
+  Columns3, GraduationCap, Gift, Headset, Home, Inbox, Moon, PhoneCall, Search, Sun, Users, LifeBuoy, HelpCircle, Menu, Settings, Contact, FileText, LogOut, Smartphone,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useApp } from "@/lib/store";
@@ -23,6 +23,7 @@ export const NAV: NavItem[] = [
   { to: "/configuracoes", label: "Configurações", icon: Settings },
   { to: "/pipeline", label: "Funil", icon: Columns3 },
   { to: "/inbox", label: "Conversas", icon: Inbox },
+  { to: "/whatsapp", label: "WhatsApp", icon: Smartphone, full: true },
   { to: "/dialer", label: "Discador", icon: PhoneCall, full: true },
   { to: "/portal", label: "Pós-venda", icon: Headset },
   { to: "/indicacoes", label: "Indicações", icon: Gift, full: true },
