@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "updated_at": "2026-11-12T17:31:19.117Z",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Crie o assistente de primeiro acesso e a central de configurações para que cada cliente configure seu WhatsApp, banco/PIX e contas Meta de forma independente.",
+      "attachments": []
+    },
+    {
+      "role": "assistant",
+      "text": "Para configurar WhatsApp e contas Meta por empresa, preciso verificar como o banco e o servidor isolam e armazenam credenciais. O projeto também orienta que alterações no banco sejam feitas pela Lovable, não diretamente em migrations. Sem essa base, uma central visual não conseguiria salvar configurações independentes com segurança."
+    }
+  ]
+}
