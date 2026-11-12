@@ -39,11 +39,9 @@ Principais módulos e requisitos fundamentais:
 
 Design moderno, minimalista, ultra-rápido estilo Linear/Raycast, com alternador de tema claro/escuro e alta responsividade.
 
-This project was built with [Lovable](https://lovable.dev).
+This project was built with.
+## Build 
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/ec022b51-22e1-4fd0-a16e-37b9500a13aa).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
