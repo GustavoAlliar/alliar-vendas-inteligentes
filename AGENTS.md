@@ -34,3 +34,6 @@ use the editor.
 - Tenant membership and roles live only in user_roles; privileged membership changes use authenticated SQL functions so clients cannot self-promote.
 - Contact + lead creation and earned commissions are transactional SQL functions/triggers to avoid partial saves and duplicate accruals.
 - Business rules (discount approval, round-robin, PIX payload) are pure functions in src/lib/rules.ts and src/lib/pix.ts so they stay unit-tested.
+- Live AI runs only in requireSupabaseAuth server functions (src/lib/ai.functions.ts → ai.server.ts) so the gateway key and prompts never reach the browser.
+- WhatsApp uses the official Cloud API connector; the signed webhook stores every delivery in whatsapp_webhook_events before processing, with bounded retry of pending rows on each call, so no callback is lost.
+- Team member names/e-mails come from the tenant_members SQL function, which reads auth emails only for members of the same company.
